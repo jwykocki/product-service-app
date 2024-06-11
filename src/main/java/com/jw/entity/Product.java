@@ -22,4 +22,3 @@ public class Product {
 
     private int available;
 }
-

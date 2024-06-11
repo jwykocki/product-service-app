@@ -1,12 +1,11 @@
 package com.jw.controller;
 
-
+import com.jw.dto.ProductRequest;
+import com.jw.dto.ProductsResponse;
 import com.jw.entity.Product;
 import com.jw.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/product")
@@ -17,15 +16,13 @@ public class ProductController {
 
     @GetMapping
     @ResponseBody
-    public List<Product> getAllProducts() {
+    public ProductsResponse getAllProducts() {
         return productService.getAllProducts();
     }
 
     @PostMapping
     @ResponseBody
-    public Product saveProduct(@RequestBody  Product product) {
-        return productService.saveProduct(product);
+    public Product saveProduct(@RequestBody ProductRequest productRequest) {
+        return productService.saveProduct(productRequest);
     }
-
-
 }

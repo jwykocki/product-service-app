@@ -1,26 +1,29 @@
 package com.jw.service;
 
+import com.jw.dto.ProductRequest;
+import com.jw.dto.ProductsResponse;
 import com.jw.entity.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public ProductsResponse getAllProducts() {
+        return new ProductsResponse(productRepository.findAll().stream()
+                .map(productMapper::toResponse)
+                .toList());
     }
 
     public Product getProductById(Long id) {
         return productRepository.findById(id).orElse(null);
     }
 
-    public Product saveProduct(Product product) {
-        return productRepository.save(product);
+    public Product saveProduct(ProductRequest productRequest) {
+        return productRepository.save(productMapper.toProduct(productRequest));
     }
 }
