@@ -1,6 +1,7 @@
 package com.jw.controller;
 
 import com.jw.dto.ProductRequest;
+import com.jw.dto.ProductResponse;
 import com.jw.dto.ProductsResponse;
 import com.jw.entity.Product;
 import com.jw.service.ProductService;
@@ -18,6 +19,12 @@ public class ProductController {
     @ResponseBody
     public ProductsResponse getAllProducts() {
         return productService.getAllProducts();
+    }
+
+    @ResponseBody
+    @GetMapping("/{id}")
+    public ProductResponse getProductsById(@PathVariable Long id) {
+        return productService.getProductById(id);
     }
 
     @PostMapping

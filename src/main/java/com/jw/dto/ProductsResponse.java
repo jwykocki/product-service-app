@@ -1,5 +1,12 @@
 package com.jw.dto;
 
 import java.util.List;
+import lombok.*;
 
-public record ProductsResponse(List<ProductResponse> products) {}
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class ProductsResponse {
+    List<ProductResponse> products;
+}
