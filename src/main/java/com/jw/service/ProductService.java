@@ -4,6 +4,7 @@ import com.jw.dto.ProductRequest;
 import com.jw.dto.ProductResponse;
 import com.jw.dto.ProductsResponse;
 import com.jw.entity.Product;
+import com.jw.error.ProductNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ public class ProductService {
 
     public ProductResponse getProductById(Long id) {
         checkIfProductExistsOrElseThrowException(id);
-        Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
+        Product product = productRepository.findById(id).get();
         return productMapper.toResponse(product);
     }
 
@@ -42,6 +43,6 @@ public class ProductService {
     }
 
     private void checkIfProductExistsOrElseThrowException(Long id) {
-        productRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+        productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product not found"));
     }
 }
