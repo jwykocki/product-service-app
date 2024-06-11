@@ -1,6 +1,7 @@
 package com.jw.service;
 
 import com.jw.dto.ProductRequest;
+import com.jw.dto.ProductResponse;
 import com.jw.dto.ProductsResponse;
 import com.jw.entity.Product;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,9 @@ public class ProductService {
                 .toList());
     }
 
-    public Product getProductById(Long id) {
-        return productRepository.findById(id).orElse(null);
+    public ProductResponse getProductById(Long id) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
+        return productMapper.toResponse(product);
     }
 
     public Product saveProduct(ProductRequest productRequest) {
