@@ -42,8 +42,6 @@ public class ProductService {
     }
 
     private void checkIfProductExistsOrElseThrowException(Long id) {
-        productRepository
-                .findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+        productRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
     }
 }
