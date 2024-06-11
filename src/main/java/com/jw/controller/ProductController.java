@@ -15,21 +15,34 @@ public class ProductController {
 
     private final ProductService productService;
 
+    @PostMapping
+    @ResponseBody
+    public Product saveProduct(@RequestBody ProductRequest productRequest) {
+        return productService.saveProduct(productRequest);
+    }
+
     @GetMapping
     @ResponseBody
     public ProductsResponse getAllProducts() {
         return productService.getAllProducts();
     }
 
-    @ResponseBody
     @GetMapping("/{id}")
+    @ResponseBody
     public ProductResponse getProductsById(@PathVariable Long id) {
+
         return productService.getProductById(id);
     }
 
-    @PostMapping
+    @PutMapping
     @ResponseBody
-    public Product saveProduct(@RequestBody ProductRequest productRequest) {
-        return productService.saveProduct(productRequest);
+    public ProductResponse updateProduct(@RequestBody ProductRequest productRequest) {
+        return productService.updateProduct(productRequest);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    public void deleteProduct(@PathVariable Long id) {
+        productService.deleteProduct(id);
     }
 }

@@ -14,6 +14,10 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
 
+    public Product saveProduct(ProductRequest productRequest) {
+        return productRepository.save(productMapper.toProduct(productRequest));
+    }
+
     public ProductsResponse getAllProducts() {
         return new ProductsResponse(productRepository.findAll().stream()
                 .map(productMapper::toResponse)
@@ -21,11 +25,25 @@ public class ProductService {
     }
 
     public ProductResponse getProductById(Long id) {
+        checkIfProductExistsOrElseThrowException(id);
         Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
         return productMapper.toResponse(product);
     }
 
-    public Product saveProduct(ProductRequest productRequest) {
-        return productRepository.save(productMapper.toProduct(productRequest));
+    public ProductResponse updateProduct(ProductRequest productRequest) {
+        checkIfProductExistsOrElseThrowException(productRequest.id());
+        Product product = productRepository.save(productMapper.toProduct(productRequest));
+        return productMapper.toResponse(product);
+    }
+
+    public void deleteProduct(Long id) {
+        checkIfProductExistsOrElseThrowException(id);
+        productRepository.deleteById(id);
+    }
+
+    private void checkIfProductExistsOrElseThrowException(Long id) {
+        productRepository
+                .findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
     }
 }
