@@ -4,7 +4,6 @@ import com.jw.dto.ProductRequest;
 import com.jw.dto.ProductResponse;
 import com.jw.dto.ProductsResponse;
 import com.jw.entity.Product;
-import com.jw.error.ProductNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,37 +11,29 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ProductService {
 
-    private final ProductRepository productRepository;
+    private final DbService dbService;
     private final ProductMapper productMapper;
 
-    public Product saveProduct(ProductRequest productRequest) {
-        return productRepository.save(productMapper.toProduct(productRequest));
+    public ProductResponse saveProduct(ProductRequest productRequest) {
+        return productMapper.toResponse(dbService.saveProduct(productMapper.toProduct(productRequest)));
     }
 
     public ProductsResponse getAllProducts() {
-        return new ProductsResponse(productRepository.findAll().stream()
+        return new ProductsResponse(dbService.getAllProducts().stream()
                 .map(productMapper::toResponse)
                 .toList());
     }
 
     public ProductResponse getProductById(Long id) {
-        checkIfProductExistsOrElseThrowException(id);
-        Product product = productRepository.findById(id).get();
-        return productMapper.toResponse(product);
+        return productMapper.toResponse(dbService.getProductById(id));
     }
 
     public ProductResponse updateProduct(ProductRequest productRequest) {
-        checkIfProductExistsOrElseThrowException(productRequest.id());
-        Product product = productRepository.save(productMapper.toProduct(productRequest));
+        Product product = dbService.updateProduct(productMapper.toProduct(productRequest));
         return productMapper.toResponse(product);
     }
 
     public void deleteProduct(Long id) {
-        checkIfProductExistsOrElseThrowException(id);
-        productRepository.deleteById(id);
-    }
-
-    private void checkIfProductExistsOrElseThrowException(Long id) {
-        productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product not found"));
+        dbService.deleteProduct(id);
     }
 }

@@ -3,6 +3,8 @@ package com.jw.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.lang.annotation.Target;
+
 @Entity
 @Table(name = "product_table")
 @AllArgsConstructor
@@ -14,7 +16,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long productid;
 
     private String name;
 

@@ -7,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductResponse {
-    Long id;
+    Long productid;
     String name;
     int reserved;
     int available;

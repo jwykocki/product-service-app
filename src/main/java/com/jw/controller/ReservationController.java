@@ -1,9 +1,6 @@
 package com.jw.controller;
 
-import com.jw.dto.ProductRequest;
 import com.jw.dto.reservation.ProductReservationRequest;
-import com.jw.entity.Product;
-import com.jw.service.ProductService;
 import com.jw.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
