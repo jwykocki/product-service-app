@@ -3,8 +3,6 @@ package com.jw.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.lang.annotation.Target;
-
 @Entity
 @Table(name = "product_table")
 @AllArgsConstructor

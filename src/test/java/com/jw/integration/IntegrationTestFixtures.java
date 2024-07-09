@@ -43,7 +43,7 @@ class IntegrationTestFixtures {
     }
 
     static void assertTestProductCorrectness(Product product) {
-        assertThat(product.getId()).isNotNull();
+        assertThat(product.getProductid()).isNotNull();
         assertThat(product.getName()).isEqualTo(CREATE_PRODUCT_NAME);
         assertThat(product.getReserved()).isEqualTo(CREATE_PRODUCT_RESERVED);
         assertThat(product.getAvailable()).isEqualTo(CREATE_PRODUCT_AVAILABLE);

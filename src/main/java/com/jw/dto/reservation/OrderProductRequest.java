@@ -1,3 +1,6 @@
 package com.jw.dto.reservation;
 
-public record OrderProductRequest(Long productId, int quantity) {}
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+
+public record OrderProductRequest(@NotNull Long productId, @Min(1) @NotNull Integer quantity) {}

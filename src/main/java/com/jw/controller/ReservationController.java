@@ -1,7 +1,9 @@
 package com.jw.controller;
 
 import com.jw.dto.reservation.ProductReservationRequest;
+import com.jw.dto.reservation.ReservationResult;
 import com.jw.service.ReservationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +17,10 @@ public class ReservationController {
 
     @PostMapping
     @ResponseBody
-    public void reserveProducts(@RequestBody ProductReservationRequest productReservationRequest) {
+    public ReservationResult reserveProducts(@RequestBody @Valid ProductReservationRequest productReservationRequest) {
         log.info("reserve products request: {}", productReservationRequest);
-        reservationService.processProductReservation(productReservationRequest);
+        reservationService.processReservationRequest(productReservationRequest);
+        return new ReservationResult(
+                productReservationRequest.orderId(), "SUCCESS", "Reservation was processed successfully");
     }
 }
