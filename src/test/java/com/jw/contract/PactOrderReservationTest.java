@@ -1,31 +1,42 @@
 package com.jw.contract;
 
-import au.com.dius.pact.consumer.Pact;
-import au.com.dius.pact.consumer.dsl.PactDslWithProvider;
-import au.com.dius.pact.consumer.junit5.PactTestFor;
-import au.com.dius.pact.model.RequestResponsePact;
+import au.com.dius.pact.provider.junit.Provider;
+import au.com.dius.pact.provider.junit.State;
+import au.com.dius.pact.provider.junit.loader.PactFolder;
+import au.com.dius.pact.provider.junit5.HttpTestTarget;
+import au.com.dius.pact.provider.junit5.PactVerificationContext;
+import au.com.dius.pact.provider.junit5.PactVerificationInvocationContextProvider;
+import com.jw.ProductServiceAppApplication;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestTemplate;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.SpringApplication;
+import org.springframework.web.context.ConfigurableWebApplicationContext;
 
-import java.util.HashMap;
-import java.util.Map;
-
-@PactTestFor(providerName = "test_provider", hostInterface="localhost")
+@Provider("productService")
+@PactFolder("pacts")
 public class PactOrderReservationTest {
 
-    @Pact(consumer = "test_consumer")
-    public RequestResponsePact createPact(PactDslWithProvider builder) {
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Content-Type", "application/json");
 
-        return builder
-                .given("test POST")
-                .uponReceiving("POST REQUEST")
-                .path("/reserve")
-                .method("POST")
-                .willRespondWith()
-                .status(200)
-                .headers(headers)
-                .body("{\"condition\": true, \"name\": \"tom\"}").toPact();
+
+    @BeforeEach
+    void before(PactVerificationContext context) {
+        context.setTarget(new HttpTestTarget("localhost", 8082, "/"));
     }
 
+    @TestTemplate
+    @ExtendWith(PactVerificationInvocationContextProvider.class)
+    void pactVerificationTestTemplate(PactVerificationContext context) {
+        context.verifyInteraction();
+    }
 
+    @BeforeAll
+    public static void start() {
+        ConfigurableWebApplicationContext application =
+                (ConfigurableWebApplicationContext) SpringApplication.run(ProductServiceAppApplication.class);
+    }
+
+    @State("test POST")
+    public void toPostState() {}
 }
