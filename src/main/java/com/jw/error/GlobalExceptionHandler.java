@@ -1,5 +1,6 @@
 package com.jw.error;
 
+import com.jw.dto.reservation.ReservationResult;
 import java.util.Collections;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -26,5 +27,14 @@ public class GlobalExceptionHandler {
     public ErrorResponse productNotFoundHandler(ProductNotFoundException exception) {
         log.error(exception);
         return new ErrorResponse(exception.getMessage(), Collections.emptyList());
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @ExceptionHandler(ReservationFailException.class)
+    @ResponseBody
+    public ReservationResult reservationFailHandler(ReservationFailException exception) {
+        log.error(exception);
+        return new ReservationResult(
+                exception.getOrderId(), "FAIL", exception.getCause().getMessage());
     }
 }

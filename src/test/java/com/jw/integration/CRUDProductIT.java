@@ -103,7 +103,7 @@ public class CRUDProductIT {
     public void shouldGetProductByIdFromDatabase() throws Exception {
 
         // given
-        long id = saveTestProductAndReturn().getId();
+        long id = saveTestProductAndReturn().getProductid();
 
         // when
         var result = callEndpointAndReturn(HttpMethod.GET, "/product/" + id, EMPTY_BODY);
@@ -119,7 +119,7 @@ public class CRUDProductIT {
     public void shouldUpdateProduct() throws Exception {
 
         // given
-        long id = saveTestProductAndReturn().getId();
+        long id = saveTestProductAndReturn().getProductid();
 
         // when
         var result = callEndpointAndReturn(HttpMethod.PUT, "/product", getUpdateProductRequestBody(id));
@@ -135,7 +135,7 @@ public class CRUDProductIT {
     public void shouldDeleteProductFromDatabase() throws Exception {
 
         // given
-        long id = saveTestProductAndReturn().getId();
+        long id = saveTestProductAndReturn().getProductid();
 
         // when
         var result = callEndpointAndReturn(HttpMethod.DELETE, "/product/" + id, EMPTY_BODY);

@@ -3,7 +3,6 @@ package com.jw.controller;
 import com.jw.dto.ProductRequest;
 import com.jw.dto.ProductResponse;
 import com.jw.dto.ProductsResponse;
-import com.jw.entity.Product;
 import com.jw.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +16,7 @@ public class ProductController {
 
     @PostMapping
     @ResponseBody
-    public Product saveProduct(@RequestBody ProductRequest productRequest) {
+    public ProductResponse saveProduct(@RequestBody ProductRequest productRequest) {
         return productService.saveProduct(productRequest);
     }
 
@@ -27,11 +26,11 @@ public class ProductController {
         return productService.getAllProducts();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{productId}")
     @ResponseBody
-    public ProductResponse getProductsById(@PathVariable Long id) {
+    public ProductResponse getProductsById(@PathVariable Long productId) {
 
-        return productService.getProductById(id);
+        return productService.getProductById(productId);
     }
 
     @PutMapping
@@ -40,9 +39,9 @@ public class ProductController {
         return productService.updateProduct(productRequest);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{productId}")
     @ResponseBody
-    public void deleteProduct(@PathVariable Long id) {
-        productService.deleteProduct(id);
+    public void deleteProduct(@PathVariable Long productId) {
+        productService.deleteProduct(productId);
     }
 }
