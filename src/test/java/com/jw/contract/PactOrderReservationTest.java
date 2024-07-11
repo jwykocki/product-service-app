@@ -7,6 +7,7 @@ import au.com.dius.pact.provider.junit5.HttpTestTarget;
 import au.com.dius.pact.provider.junit5.PactVerificationContext;
 import au.com.dius.pact.provider.junit5.PactVerificationInvocationContextProvider;
 import com.jw.ProductServiceAppApplication;
+import com.jw.dto.reservation.ProductReservationRequest;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestTemplate;
@@ -17,8 +18,6 @@ import org.springframework.web.context.ConfigurableWebApplicationContext;
 @Provider("productService")
 @PactFolder("pacts")
 public class PactOrderReservationTest {
-
-
 
     @BeforeEach
     void before(PactVerificationContext context) {
