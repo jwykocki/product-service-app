@@ -18,11 +18,15 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping
-    public ResponseEntity<ReservationResult> reserveProducts(@RequestBody @Valid ProductReservationRequest productReservationRequest) {
+    public ResponseEntity<ReservationResult> reserveProducts(
+            @RequestBody @Valid ProductReservationRequest productReservationRequest) {
         log.info("reserve products request: {}", productReservationRequest);
         reservationService.processReservationRequest(productReservationRequest);
         HttpHeaders headers = new HttpHeaders();
-        return new ResponseEntity<>(new ReservationResult(
-                productReservationRequest.orderId(), "SUCCESS", "Reservation was processed successfully"), headers , 200);
+        return new ResponseEntity<>(
+                new ReservationResult(
+                        productReservationRequest.orderId(), "SUCCESS", "Reservation was processed successfully"),
+                headers,
+                200);
     }
 }

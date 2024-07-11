@@ -28,8 +28,10 @@ public class ProductService {
         return productMapper.toResponse(dbService.getProductById(id));
     }
 
-    public ProductResponse updateProduct(ProductRequest productRequest) {
-        Product product = dbService.updateProduct(productMapper.toProduct(productRequest));
+    public ProductResponse updateProduct(Long productId, ProductRequest productRequest) {
+        Product product = productMapper.toProduct(productRequest);
+        product.setProductid(productId);
+        dbService.updateProduct(product);
         return productMapper.toResponse(product);
     }
 
