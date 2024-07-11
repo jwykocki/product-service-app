@@ -2,6 +2,7 @@ package com.jw.contract;
 
 import au.com.dius.pact.core.model.V4Pact;
 import au.com.dius.pact.core.model.annotations.Pact;
+import au.com.dius.pact.provider.ProviderInfo;
 import au.com.dius.pact.provider.junit.Provider;
 import au.com.dius.pact.provider.junit.State;
 import au.com.dius.pact.provider.junit.loader.PactFolder;
@@ -13,6 +14,7 @@ import com.jw.ProductServiceAppApplication;
 import com.jw.controller.ReservationController;
 import com.jw.dto.reservation.OrderProductRequest;
 import com.jw.dto.reservation.ProductReservationRequest;
+import com.jw.dto.reservation.ReservationResult;
 import com.jw.service.ReservationService;
 import jakarta.inject.Inject;
 import lombok.RequiredArgsConstructor;
@@ -29,43 +31,43 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Profile;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.context.ConfigurableWebApplicationContext;
 
 import static org.mockito.ArgumentMatchers.any;
 
+@ActiveProfiles("test")
 @Provider("productService")
 @PactFolder("pacts")
 @SpringBootTest
-
 public class PactOrderReservationTest {
 
-    @Mock
+    @InjectMocks
     private ReservationService reservationService;
 
     @InjectMocks
-    ReservationController reservationController;
+    private ReservationController reservationController;
 
     @BeforeEach
     void before(PactVerificationContext context) {
+        MockitoAnnotations.openMocks(this);
+        reservationService = Mockito.mock(ReservationService.class);
+        Mockito.doNothing().when(reservationService).processReservationRequest(any());
         context.setTarget(new HttpTestTarget("localhost", 8082, "/"));
-
     }
 
     @AfterEach
     void after(PactVerificationContext context) {
+        Mockito.verify(reservationService, Mockito.times(1)).processReservationRequest(any());
     }
 
     @TestTemplate
     @ExtendWith(PactVerificationInvocationContextProvider.class)
     void pactVerificationTestTemplate(PactVerificationContext context) {
-        MockitoAnnotations.initMocks(this);
-        ReservationService reservationService = Mockito.mock(ReservationService.class);
-        Mockito.doNothing().when(reservationService).processReservationRequest(any());
         context.verifyInteraction();
-        Mockito.verify(reservationService, Mockito.times(1)).processReservationRequest(any());
-
     }
 
     @BeforeAll
