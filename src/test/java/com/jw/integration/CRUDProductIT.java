@@ -122,7 +122,7 @@ public class CRUDProductIT {
         long id = saveTestProductAndReturn().getProductid();
 
         // when
-        var result = callEndpointAndReturn(HttpMethod.PUT, "/product", getUpdateProductRequestBody(id));
+        var result = callEndpointAndReturn(HttpMethod.PUT, "/product" + "/" + id, getUpdateProductRequestBody(id));
 
         // then
         assertThat(result.getStatus()).isEqualTo(200);
