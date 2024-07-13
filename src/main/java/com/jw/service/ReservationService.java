@@ -7,11 +7,13 @@ import com.jw.error.ProductNotAvailableException;
 import com.jw.error.ProductNotFoundException;
 import com.jw.error.ReservationFailException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ReservationService {
 
     private final DbService dbService;
@@ -19,6 +21,7 @@ public class ReservationService {
     @Transactional
     public void processReservationRequest(ProductReservationRequest productReservationRequest) {
         try {
+            log.info("Processing reservation request");
             productReservationRequest.orderProducts().forEach(this::processProductReservation);
         } catch (ProductNotAvailableException | ProductNotFoundException e) {
             throw new ReservationFailException(productReservationRequest.orderId(), e);

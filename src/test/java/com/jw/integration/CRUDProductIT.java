@@ -4,11 +4,13 @@ import static com.jw.integration.IntegrationTestFixtures.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
 
+import com.jw.dto.ProductResponse;
 import com.jw.dto.ProductsResponse;
 import com.jw.entity.Product;
 import com.jw.service.ProductMapper;
 import com.jw.service.ProductRepository;
 import java.util.List;
+import org.apache.hc.core5.http.HttpStatus;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,22 +65,22 @@ public class CRUDProductIT {
     @AfterEach
     public void cleanDatabase() {
         productRepository.deleteAll();
-        assertThat(productRepository.count()).isEqualTo(0);
+        assertThat(productRepository.findAll()).isEmpty();
     }
 
     @Test
     public void shouldSaveProductToDatabase() throws Exception {
 
         // given
-        assertThat(productRepository.count()).isEqualTo(0);
+        assertThat(productRepository.findAll()).isEmpty();
 
         // when
-        var result = callEndpointAndReturn(HttpMethod.POST, "/product", CREATE_PRODUCT_REQUEST);
-        assertThat(result.getStatus()).isEqualTo(200);
+        var result = callEndpointAndReturn(HttpMethod.POST, PRODUCT_ENDPOINT, CREATE_PRODUCT_REQUEST);
+        assertThat(result.getStatus()).isEqualTo(HttpStatus.SC_OK);
 
         // then
         List<Product> products = productRepository.findAll();
-        assertThat(products.size()).isEqualTo(1);
+        assertThat(products).hasSize(1);
         assertTestProductCorrectness(products.get(0));
     }
 
@@ -89,14 +91,14 @@ public class CRUDProductIT {
         saveTestProductAndReturn();
 
         // when
-        var result = callEndpointAndReturn(HttpMethod.GET, "/product", EMPTY_BODY);
+        var result = callEndpointAndReturn(HttpMethod.GET, PRODUCT_ENDPOINT, EMPTY_BODY);
 
         // then
-        ProductsResponse productsResponse =
-                new ObjectMapper().readValue(result.getContentAsString(), ProductsResponse.class);
-        assertThat(productsResponse.getProducts().size()).isEqualTo(1);
-        assertTestProductCorrectness(
-                productMapper.toProduct(productsResponse.getProducts().get(0)));
+        List<ProductResponse> productsResponse = new ObjectMapper()
+                .readValue(result.getContentAsString(), ProductsResponse.class)
+                .getProducts();
+        assertThat(productsResponse).hasSize(1);
+        assertTestProductCorrectness(productMapper.toProduct(productsResponse.get(0)));
     }
 
     @Test
@@ -106,12 +108,12 @@ public class CRUDProductIT {
         long id = saveTestProductAndReturn().getProductid();
 
         // when
-        var result = callEndpointAndReturn(HttpMethod.GET, "/product/" + id, EMPTY_BODY);
+        var result = callEndpointAndReturn(HttpMethod.GET, PRODUCT_ENDPOINT + "/" + id, EMPTY_BODY);
 
         // then
-        assertThat(result.getStatus()).isEqualTo(200);
+        assertThat(result.getStatus()).isEqualTo(HttpStatus.SC_OK);
         List<Product> products = productRepository.findAll();
-        assertThat(products.size()).isEqualTo(1);
+        assertThat(products).hasSize(1);
         assertTestProductCorrectness(products.get(0));
     }
 
@@ -122,13 +124,12 @@ public class CRUDProductIT {
         long id = saveTestProductAndReturn().getProductid();
 
         // when
-        var result = callEndpointAndReturn(HttpMethod.PUT, "/product", getUpdateProductRequestBody(id));
+        var result = callEndpointAndReturn(HttpMethod.PUT, PRODUCT_ENDPOINT + "/" + id, UPDATE_PRODUCT_REQUEST);
 
         // then
-        assertThat(result.getStatus()).isEqualTo(200);
+        assertThat(result.getStatus()).isEqualTo(HttpStatus.SC_OK);
         List<Product> products = productRepository.findAll();
-        assertThat(products.size()).isEqualTo(1);
-        assertThat(products.get(0).getName()).isEqualTo(UPDATED_PRODUCT_NAME);
+        assertThat(products).hasSize(1).first().extracting("name").isEqualTo(UPDATED_PRODUCT_NAME);
     }
 
     @Test
@@ -138,11 +139,11 @@ public class CRUDProductIT {
         long id = saveTestProductAndReturn().getProductid();
 
         // when
-        var result = callEndpointAndReturn(HttpMethod.DELETE, "/product/" + id, EMPTY_BODY);
+        var result = callEndpointAndReturn(HttpMethod.DELETE, PRODUCT_ENDPOINT + "/" + id, EMPTY_BODY);
 
         // then
-        assertThat(result.getStatus()).isEqualTo(200);
-        assertThat(productRepository.count()).isEqualTo(0);
+        assertThat(result.getStatus()).isEqualTo(HttpStatus.SC_OK);
+        assertThat(productRepository.findAll()).isEmpty();
     }
 
     private MockHttpServletResponse callEndpointAndReturn(HttpMethod method, String path, String content)
@@ -155,7 +156,7 @@ public class CRUDProductIT {
     private Product saveTestProductAndReturn() {
         productRepository.save(getTestProduct());
         List<Product> productsSaved = productRepository.findAll();
-        assertThat(productsSaved.size()).isEqualTo(1);
+        assertThat(productsSaved).hasSize(1);
         return productsSaved.get(0);
     }
 }

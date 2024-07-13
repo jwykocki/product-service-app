@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public ErrorResponse globalHandler(Exception exception) {
         log.error(exception);
-        return new ErrorResponse("An error occurred", Collections.emptyList());
+        return new ErrorResponse(exception.getMessage(), Collections.emptyList());
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
