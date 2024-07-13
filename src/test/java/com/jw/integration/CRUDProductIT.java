@@ -10,7 +10,6 @@ import com.jw.entity.Product;
 import com.jw.service.ProductMapper;
 import com.jw.service.ProductRepository;
 import java.util.List;
-
 import org.apache.hc.core5.http.HttpStatus;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
