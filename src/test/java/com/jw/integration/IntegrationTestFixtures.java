@@ -6,29 +6,29 @@ import com.jw.entity.Product;
 
 class IntegrationTestFixtures {
 
+    static final String PRODUCT_ENDPOINT = "/product";
+    static final String CREATE_PRODUCT_NAME = "testName";
+    static final String UPDATED_PRODUCT_NAME = "updatedTestName";
+
     static final String CREATE_PRODUCT_REQUEST =
             """
             {
-                "name": "testName",
-                "reserved": 0,
-                "available": 5
-            }
-            """;
-
-    static String getUpdateProductRequestBody(long id) {
-        return """
-            {
-                "id": %s,
-                "name": "updatedTestName",
+                "name": "%s",
                 "reserved": 0,
                 "available": 5
             }
             """
-                .formatted(id);
-    }
+                    .formatted(CREATE_PRODUCT_NAME);
 
-    static final String CREATE_PRODUCT_NAME = "testName";
-    static final String UPDATED_PRODUCT_NAME = "updatedTestName";
+    static String UPDATE_PRODUCT_REQUEST =
+            """
+            {
+                "name": "%s",
+                "reserved": 0,
+                "available": 5
+            }
+            """
+                    .formatted(UPDATED_PRODUCT_NAME);
 
     static final int CREATE_PRODUCT_RESERVED = 0;
     static final int CREATE_PRODUCT_AVAILABLE = 5;
