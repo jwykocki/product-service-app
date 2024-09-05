@@ -21,7 +21,7 @@ public class ReservationController {
     public ResponseEntity<ReservationResult> reserveProducts(
             @RequestBody @Valid ProductReservationRequest productReservationRequest) {
         log.info("reserve products request: {}", productReservationRequest);
-        reservationService.processReservationRequest(productReservationRequest);
+        reservationService.processProductReservation(productReservationRequest);
         HttpHeaders headers = new HttpHeaders();
         return new ResponseEntity<>(
                 new ReservationResult(
