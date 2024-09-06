@@ -1,11 +1,12 @@
 package com.jw.service;
 
+import static com.jw.constants.OrderProductStatus.*;
+
 import com.jw.dto.reservation.OrderProductRequest;
 import com.jw.dto.reservation.ProductReservationRequest;
 import com.jw.entity.Product;
 import com.jw.error.ProductNotAvailableException;
 import com.jw.error.ProductNotFoundException;
-import com.jw.error.ReservationFailException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,19 +20,19 @@ public class ReservationService {
     private final DbService dbService;
 
     @Transactional
-    public void processReservationRequest(ProductReservationRequest productReservationRequest) {
+    public String processProductReservation(ProductReservationRequest productReservationRequest) {
+        log.info("Processing product reservation request (id = {})", productReservationRequest.orderId());
+        OrderProductRequest orderProductRequest = productReservationRequest.product();
         try {
-            log.info("Processing reservation request");
-            productReservationRequest.orderProducts().forEach(this::processProductReservation);
-        } catch (ProductNotAvailableException | ProductNotFoundException e) {
-            throw new ReservationFailException(productReservationRequest.orderId(), e);
+            Product product = dbService.getProductById(orderProductRequest.productId());
+            checkIfProductIsAvailable(orderProductRequest, product);
+            makeReservation(orderProductRequest, product);
+        } catch (ProductNotAvailableException e) {
+            return NOT_AVAILABLE;
+        } catch (ProductNotFoundException e) {
+            return NOT_FOUND;
         }
-    }
-
-    private void processProductReservation(OrderProductRequest orderProductRequest) {
-        Product product = dbService.getProductById(orderProductRequest.productId());
-        checkIfProductIsAvailable(orderProductRequest, product);
-        makeReservation(orderProductRequest, product);
+        return RESERVED;
     }
 
     private void checkIfProductIsAvailable(OrderProductRequest orderProduct, Product product) {
