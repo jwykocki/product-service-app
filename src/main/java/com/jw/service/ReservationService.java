@@ -1,5 +1,8 @@
 package com.jw.service;
 
+import static com.jw.entity.OrderProductStatus.NOT_AVAILABLE;
+import static com.jw.entity.OrderProductStatus.RESERVED;
+
 import com.jw.dto.reservation.OrderProductRequest;
 import com.jw.dto.reservation.ProductReservationRequest;
 import com.jw.entity.Product;
@@ -17,14 +20,6 @@ public class ReservationService {
 
     private final DbService dbService;
 
-    //    public void processReservationRequest(ProductReservationRequest productReservationRequest) {
-    //        try {
-    //
-    //            productReservationRequest.orderProducts().forEach(this::processProductReservation);
-    //        } catch (ProductNotAvailableException | ProductNotFoundException e) {
-    //            throw new ReservationFailException(productReservationRequest.orderId(), e);
-    //        }
-    //    }
     @Transactional
     public String processProductReservation(ProductReservationRequest productReservationRequest) {
         log.info("Processing reservation request");
@@ -34,9 +29,9 @@ public class ReservationService {
             checkIfProductIsAvailable(orderProductRequest, product);
             makeReservation(orderProductRequest, product);
         } catch (ProductNotAvailableException | ProductNotFoundException e) {
-            return "NOT AVAILABLE";
+            return NOT_AVAILABLE;
         }
-        return "SUCCESS";
+        return RESERVED;
     }
 
     private void checkIfProductIsAvailable(OrderProductRequest orderProduct, Product product) {
