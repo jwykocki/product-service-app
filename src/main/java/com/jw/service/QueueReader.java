@@ -20,9 +20,10 @@ public class QueueReader {
 
     @RabbitListener(queues = "unprocessed-products")
     public void receiveMessage(String request) {
-        System.out.println("Received reservation request: " + request);
+        log.info("Received product reservation request");
         ProductReservationRequest productReservationRequest = mapper.toProductReservationRequest(request);
         String status = reservationService.processProductReservation(productReservationRequest);
+        log.info("Processed product reservation request (id = {})", productReservationRequest.orderId());
         ProductReservationResult result = new ProductReservationResult(
                 productReservationRequest.orderId(), productReservationRequest.product(), status);
         queueWriter.send(result);

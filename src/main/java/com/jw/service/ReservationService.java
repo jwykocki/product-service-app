@@ -21,9 +21,8 @@ public class ReservationService {
 
     @Transactional
     public String processProductReservation(ProductReservationRequest productReservationRequest) {
-        log.info("Processing reservation request");
+        log.info("Processing product reservation request (id = {})", productReservationRequest.orderId());
         OrderProductRequest orderProductRequest = productReservationRequest.product();
-
         try {
             Product product = dbService.getProductById(orderProductRequest.productId());
             checkIfProductIsAvailable(orderProductRequest, product);

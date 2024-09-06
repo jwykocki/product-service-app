@@ -18,8 +18,8 @@ public class QueueWriter {
     private final OrderProductMapper mapper;
 
     public void send(ProductReservationResult productReservationResult) {
+        log.info("Sending reservation result on processed-products queue (id = {})", productReservationResult.orderId());
         String result = mapper.toJson(productReservationResult);
-        log.info("Sending reservation result: {}", result);
         template.send(queue.getName(), new Message(result.getBytes()));
     }
 }
