@@ -1,7 +1,5 @@
 package com.jw.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jw.dto.reservation.ProductReservationRequest;
 import com.jw.dto.reservation.ProductReservationResult;
 import lombok.RequiredArgsConstructor;
@@ -14,21 +12,19 @@ import org.springframework.stereotype.Component;
 @EnableRabbit
 @Slf4j
 @RequiredArgsConstructor
-public class QueueProcessor {
+public class QueueReader {
 
-    private final QueueSender queueSender;
+    private final QueueWriter queueWriter;
     private final ReservationService reservationService;
+    private final OrderProductMapper mapper;
 
     @RabbitListener(queues = "unprocessed-products")
-    public void receiveMessage(String request) throws JsonProcessingException {
+    public void receiveMessage(String request) {
         System.out.println("Received reservation request: " + request);
-        ObjectMapper objectMapper = new ObjectMapper();
-        ProductReservationRequest productReservationRequest =
-                objectMapper.readValue(request, ProductReservationRequest.class);
-        System.out.println(productReservationRequest);
+        ProductReservationRequest productReservationRequest = mapper.toProductReservationRequest(request);
         String status = reservationService.processProductReservation(productReservationRequest);
         ProductReservationResult result = new ProductReservationResult(
                 productReservationRequest.orderId(), productReservationRequest.product(), status);
-        queueSender.send(result);
+        queueWriter.send(result);
     }
 }

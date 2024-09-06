@@ -1,7 +1,6 @@
 package com.jw.service;
 
-import static com.jw.entity.OrderProductStatus.NOT_AVAILABLE;
-import static com.jw.entity.OrderProductStatus.RESERVED;
+import static com.jw.constants.OrderProductStatus.*;
 
 import com.jw.dto.reservation.OrderProductRequest;
 import com.jw.dto.reservation.ProductReservationRequest;
@@ -24,12 +23,15 @@ public class ReservationService {
     public String processProductReservation(ProductReservationRequest productReservationRequest) {
         log.info("Processing reservation request");
         OrderProductRequest orderProductRequest = productReservationRequest.product();
+
         try {
             Product product = dbService.getProductById(orderProductRequest.productId());
             checkIfProductIsAvailable(orderProductRequest, product);
             makeReservation(orderProductRequest, product);
-        } catch (ProductNotAvailableException | ProductNotFoundException e) {
+        } catch (ProductNotAvailableException e) {
             return NOT_AVAILABLE;
+        } catch (ProductNotFoundException e) {
+            return NOT_FOUND;
         }
         return RESERVED;
     }

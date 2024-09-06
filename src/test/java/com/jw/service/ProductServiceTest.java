@@ -1,11 +1,10 @@
 package com.jw.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
-import com.jw.dto.ProductRequest;
+import com.jw.dto.request.ProductRequest;
 import com.jw.entity.Product;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.AfterEach;

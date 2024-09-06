@@ -1,7 +1,7 @@
 package com.jw.service;
 
-import com.jw.dto.ProductRequest;
-import com.jw.dto.ProductResponse;
+import com.jw.dto.request.ProductRequest;
+import com.jw.dto.response.ProductResponse;
 import com.jw.entity.Product;
 import org.mapstruct.Mapper;
 

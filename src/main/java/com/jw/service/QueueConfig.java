@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 public class QueueConfig {
 
     @Bean
-    public Queue hello() {
+    public Queue getQueue() {
         return new Queue("processed-products");
     }
 }

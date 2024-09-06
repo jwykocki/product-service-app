@@ -4,8 +4,8 @@ import static com.jw.integration.IntegrationTestFixtures.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
 
-import com.jw.dto.ProductResponse;
-import com.jw.dto.ProductsResponse;
+import com.jw.dto.response.ProductResponse;
+import com.jw.dto.response.ProductsResponse;
 import com.jw.entity.Product;
 import com.jw.service.ProductMapper;
 import com.jw.service.ProductRepository;
