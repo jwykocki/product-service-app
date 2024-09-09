@@ -1,5 +1,6 @@
 package com.jw.service;
 
+import com.jw.dto.finalize.FinalizedOrderQueue;
 import com.jw.dto.reservation.ProductReservationRequest;
 import com.jw.dto.reservation.ProductReservationResult;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +18,10 @@ public class QueueReader {
     private final QueueWriter queueWriter;
     private final ReservationService reservationService;
     private final OrderProductMapper mapper;
+    private final FinalizeService finalizeService;
 
     @RabbitListener(queues = "unprocessed-products")
-    public void receiveMessage(String request) {
+    public void readFromUnprocessedProducts(String request) {
         log.info("Received product reservation request");
         ProductReservationRequest productReservationRequest = mapper.toProductReservationRequest(request);
         String status = reservationService.processProductReservation(productReservationRequest);
@@ -27,5 +29,13 @@ public class QueueReader {
         ProductReservationResult result = new ProductReservationResult(
                 productReservationRequest.orderId(), productReservationRequest.product(), status);
         queueWriter.send(result);
+    }
+
+    @RabbitListener(queues = "finalized-products")
+    public void readFromFinalizedProducts(String request) {
+        log.info("Received finalize reservation request");
+        FinalizedOrderQueue finalizedOrderQueue = mapper.toFinalizedOrderQueue(request);
+        finalizeService.finalizeProduct(finalizedOrderQueue);
+        log.info("Successfully processed finalize reservation request (id = {})", finalizedOrderQueue.orderId());
     }
 }
