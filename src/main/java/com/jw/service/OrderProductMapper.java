@@ -3,7 +3,7 @@ package com.jw.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jw.dto.finalize.FinalizedOrderQueue;
 import com.jw.dto.reservation.ProductReservationRequest;
-import com.jw.stack.UpdateProduct;
+import com.jw.stock.UpdateProduct;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;

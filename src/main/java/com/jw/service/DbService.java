@@ -5,8 +5,10 @@ import com.jw.error.ProductNotFoundException;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class DbService {
@@ -18,8 +20,7 @@ public class DbService {
     }
 
     public Product getProductById(Long id) {
-        checkIfProductExistsOrElseThrowException(id);
-        return productRepository.findById(id).get();
+        return getProductOrElseThrowException(id);
     }
 
     @Transactional
@@ -33,12 +34,12 @@ public class DbService {
         return productRepository.save(product);
     }
 
-    @Transactional
     public void updateProductQuantity(Long productId, int quantity) {
-        checkIfProductExistsOrElseThrowException(productId);
-        Product product = getProductById(productId);
+        Product product = productRepository
+                .findProductByProductid(productId)
+                .orElseThrow(
+                        () -> new ProductNotFoundException("Product with id %s was not found".formatted(productId)));
         product.setAvailable(product.getAvailable() + quantity);
-        productRepository.save(product);
     }
 
     @Transactional
@@ -48,6 +49,14 @@ public class DbService {
     }
 
     private void checkIfProductExistsOrElseThrowException(Long id) {
-        productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product not found"));
+        productRepository
+                .findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Product with id %s was not found".formatted(id)));
+    }
+
+    private Product getProductOrElseThrowException(Long id) {
+        return productRepository
+                .findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Product with id %s was not found".formatted(id)));
     }
 }

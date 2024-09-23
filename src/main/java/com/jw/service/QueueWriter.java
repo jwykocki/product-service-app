@@ -1,7 +1,7 @@
 package com.jw.service;
 
 import com.jw.dto.reservation.ProductReservationResult;
-import com.jw.stack.UpdateProduct;
+import com.jw.stock.UpdateProduct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;

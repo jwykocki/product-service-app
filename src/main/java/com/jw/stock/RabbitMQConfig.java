@@ -1,6 +1,5 @@
-package com.jw.stack;
+package com.jw.stock;
 
-import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
@@ -12,11 +11,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 public class RabbitMQConfig {
 
     public static final String QUEUE_NAME = "update-products";
-
-    @Bean
-    public Queue myQueue() {
-        return new Queue(QUEUE_NAME, true);
-    }
 
     @Bean
     public ThreadPoolTaskExecutor taskExecutor() {
@@ -36,7 +30,7 @@ public class RabbitMQConfig {
         container.setQueueNames(QUEUE_NAME);
         container.setMessageListener(listenerAdapter);
         container.setTaskExecutor(taskExecutor());
-        container.setConcurrentConsumers(10);
+        container.setConcurrentConsumers(1);
         return container;
     }
 
