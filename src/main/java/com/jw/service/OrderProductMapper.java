@@ -1,6 +1,7 @@
 package com.jw.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jw.dto.finalize.FinalizedOrderQueue;
 import com.jw.dto.reservation.ProductReservationRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -14,6 +15,10 @@ public class OrderProductMapper {
 
     public ProductReservationRequest toProductReservationRequest(String json) {
         return (ProductReservationRequest) jsonToObject(json, ProductReservationRequest.class);
+    }
+
+    public FinalizedOrderQueue toFinalizedOrderQueue(String json) {
+        return (FinalizedOrderQueue) jsonToObject(json, FinalizedOrderQueue.class);
     }
 
     @SneakyThrows
