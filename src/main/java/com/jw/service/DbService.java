@@ -2,6 +2,7 @@ package com.jw.service;
 
 import com.jw.entity.Product;
 import com.jw.error.ProductNotFoundException;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,25 +13,36 @@ public class DbService {
 
     private final ProductRepository productRepository;
 
-    List<Product> getAllProducts() {
+    public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
-    Product getProductById(Long id) {
+    public Product getProductById(Long id) {
         checkIfProductExistsOrElseThrowException(id);
         return productRepository.findById(id).get();
     }
 
-    Product saveProduct(Product product) {
+    @Transactional
+    public Product saveProduct(Product product) {
         return productRepository.save(product);
     }
 
-    Product updateProduct(Product product) {
+    @Transactional
+    public Product updateProduct(Product product) {
         checkIfProductExistsOrElseThrowException(product.getProductid());
         return productRepository.save(product);
     }
 
-    void deleteProduct(Long id) {
+    @Transactional
+    public void updateProductQuantity(Long productId, int quantity) {
+        checkIfProductExistsOrElseThrowException(productId);
+        Product product = getProductById(productId);
+        product.setAvailable(product.getAvailable() + quantity);
+        productRepository.save(product);
+    }
+
+    @Transactional
+    public void deleteProduct(Long id) {
         checkIfProductExistsOrElseThrowException(id);
         productRepository.deleteById(id);
     }
