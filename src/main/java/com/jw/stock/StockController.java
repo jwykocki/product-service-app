@@ -13,7 +13,7 @@ public class StockController {
 
     private final StockService stockService;
 
-    @PostMapping("/stack/{fileName}")
+    @PostMapping("/stock/{fileName}")
     public String updateStockWithFile(@PathVariable String fileName) {
         log.info("Received request to update stock with file name {}", fileName);
         stockService.updateStockFromFile(fileName);

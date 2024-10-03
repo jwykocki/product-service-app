@@ -19,6 +19,10 @@ public class MessageReceiver {
     @Transactional
     public void receiveMessage(byte[] bytes) {
         UpdateProduct updateProduct = orderProductMapper.toUpdateProduct(new String(bytes));
+        log.info(
+                "Updating product: {} [{}]",
+                updateProduct,
+                Thread.currentThread().getName());
         dbService.updateProductQuantity(updateProduct.productId(), updateProduct.amount());
     }
 }

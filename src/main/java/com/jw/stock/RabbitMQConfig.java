@@ -30,7 +30,7 @@ public class RabbitMQConfig {
         container.setQueueNames(QUEUE_NAME);
         container.setMessageListener(listenerAdapter);
         container.setTaskExecutor(taskExecutor());
-        container.setConcurrentConsumers(1);
+        container.setConcurrentConsumers(10);
         return container;
     }
 
