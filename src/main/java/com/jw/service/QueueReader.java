@@ -28,7 +28,7 @@ public class QueueReader {
         log.info("Processed product reservation request (id = {})", productReservationRequest.orderId());
         ProductReservationResult result = new ProductReservationResult(
                 productReservationRequest.orderId(), productReservationRequest.product(), status);
-        queueWriter.send(result);
+        queueWriter.sendProductReservationResult(result);
     }
 
     @RabbitListener(queues = "finalized-products")
