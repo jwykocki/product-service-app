@@ -3,6 +3,7 @@ package com.jw.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jw.dto.finalize.FinalizedOrderQueue;
 import com.jw.dto.reservation.ProductReservationRequest;
+import com.jw.stock.UpdateProduct;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,10 @@ public class OrderProductMapper {
 
     public FinalizedOrderQueue toFinalizedOrderQueue(String json) {
         return (FinalizedOrderQueue) jsonToObject(json, FinalizedOrderQueue.class);
+    }
+
+    public UpdateProduct toUpdateProduct(String json) {
+        return (UpdateProduct) jsonToObject(json, UpdateProduct.class);
     }
 
     @SneakyThrows
